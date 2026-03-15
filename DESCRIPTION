@@ -16,6 +16,6 @@ Imports:
     ggrepel,
     dplyr,
     tools
-RoxygenNote: 7.1.1
 Suggests:
     haploR
+RoxygenNote: 7.3.3
