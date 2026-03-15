@@ -40,8 +40,8 @@ computeQ <- function(dat.list, p.thres = NULL) {
     names(Q.stats) <- paste0("exposure", 1:k)
 
     df <- nrow(data) - 1
-    Q.stats.pval <- pchisq(Q.stats, df, lower.tail = F)
-    Q.stats.log.pval <- pchisq(Q.stats, df, lower.tail = F, log.p = T)
+    Q.stats.pval <- stats::pchisq(Q.stats, df, lower.tail = F)
+    Q.stats.log.pval <- stats::pchisq(Q.stats, df, lower.tail = F, log.p = T)
     return(list(Q.stats = Q.stats,
                 df = df,
                 Q.stats.pval = Q.stats.pval,

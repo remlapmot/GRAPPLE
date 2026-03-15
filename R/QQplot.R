@@ -14,8 +14,8 @@
 #' @export
 qqDiagnosis <- function(std.residuals, outlier.quantile = 0.1/length(std.residuals),
 					   plot.it = T) {
-	thres <- qnorm(1 - outlier.quantile/2)
-	qtls <- qqnorm(std.residuals, plot.it = F)
+	thres <- stats::qnorm(1 - outlier.quantile/2)
+	qtls <- stats::qqnorm(std.residuals, plot.it = F)
 	dd <- data.frame(theoretical = qtls$x, 
 					 sample = qtls$y)
 	rownames(dd) <- names(qtls$y)
@@ -28,9 +28,9 @@ qqDiagnosis <- function(std.residuals, outlier.quantile = 0.1/length(std.residua
 	print(paste("Anderson-Darling test: p-value =", 
 				signif(ad.test(std.residuals)$p, 3)))
 	print(paste("Shapiro-Wilk test: p-value =",
-                signif(shapiro.test(std.residuals)$p, 3)))
+                signif(stats::shapiro.test(std.residuals)$p, 3)))
 
-	outliers <- which(abs(std.residuals) > qnorm(1 - outlier.quantile/2))
+	outliers <- which(abs(std.residuals) > stats::qnorm(1 - outlier.quantile/2))
 	outliers <- dd %>% filter(abs(sample) > thres)
 
 	print(paste(nrow(outliers), "outliers detected!"))

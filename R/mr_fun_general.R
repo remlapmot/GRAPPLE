@@ -69,11 +69,11 @@ grappleRobustEst <- function(data,
                   huber = function(r, ...) rho.huber(r, k, ...),
                   tukey = function(r, ...) rho.tukey(r, k, ...))
 
-    delta <- integrate(function(x)  rho(x) * dnorm(x), -Inf, Inf)$value
+    delta <- stats::integrate(function(x)  rho(x) * stats::dnorm(x), -Inf, Inf)$value
 
-    c1 <- integrate(function(x) rho(x, deriv = 1)^2 * dnorm(x), -Inf, Inf)$value
-    c2 <- integrate(function(x) rho(x)^2 * dnorm(x), -Inf, Inf)$value - delta^2
-    c4 <- integrate(function(x) rho(x, deriv = 1) * x * dnorm(x), -Inf, Inf)$value
+    c1 <- stats::integrate(function(x) rho(x, deriv = 1)^2 * stats::dnorm(x), -Inf, Inf)$value
+    c2 <- stats::integrate(function(x) rho(x)^2 * stats::dnorm(x), -Inf, Inf)$value - delta^2
+    c4 <- stats::integrate(function(x) rho(x, deriv = 1) * x * stats::dnorm(x), -Inf, Inf)$value
     c3 <- c4
 
 
@@ -102,15 +102,15 @@ grappleRobustEst <- function(data,
       tau2.hat <- 0
     else
       tau2.hat <- tau2
-    bound.beta <- apply(abs(b_out / b_exp), 2, function(v)quantile(v[is.finite(v)],
+    bound.beta <- apply(abs(b_out / b_exp), 2, function(v)stats::quantile(v[is.finite(v)],
 																   probs = 0.95, na.rm = T)) * 2
 
-    bound.tau2 <- median(b_out^2) * 2
+    bound.tau2 <- stats::median(b_out^2) * 2
     if (ncol(b_exp) == 1) {
         beta.seq <- seq(-bound.beta, bound.beta, length.out = 5000)
       beta.hat <- beta.seq[which.max(sapply(beta.seq, robust.optfun.fixtau, tau2 = 0))]
     } else {
-      beta.hat <- as.vector(lm(b_out ~ b_exp + 0)$coef)
+      beta.hat <- as.vector(stats::lm(b_out ~ b_exp + 0)$coef)
       temp.fun <- function(bb, idx) {
         beta <- rep(0, length(beta.hat))
         beta[idx] <- bb
@@ -133,7 +133,7 @@ grappleRobustEst <- function(data,
         if (temp < 0)
           tau2.hat <- 0
         else {
-          tau2.hat <- tryCatch(uniroot(function(tau2) sum(robust.E(beta.hat, tau2)),
+          tau2.hat <- tryCatch(stats::uniroot(function(tau2) sum(robust.E(beta.hat, tau2)),
                                        bound.tau2 * c(0, 1),
 									   extendInt = "downX",
                                        tol = .Machine$double.eps^0.25)$root,
@@ -143,11 +143,11 @@ grappleRobustEst <- function(data,
 
 
         if (opt.method == "L-BFGS-B") {
-          beta.hat <- optim(beta.hat, function(beta) robust.optfun.fixtau(beta, tau2.hat),
+          beta.hat <- stats::optim(beta.hat, function(beta) robust.optfun.fixtau(beta, tau2.hat),
                             method = opt.method, lower = -bound.beta, upper = bound.beta,
                             control = list(fnscale = -1))$par
         } else
-          beta.hat <- optim(beta.hat, function(beta) robust.optfun.fixtau(beta, tau2.hat),
+          beta.hat <- stats::optim(beta.hat, function(beta) robust.optfun.fixtau(beta, tau2.hat),
                             method = opt.method, #lower = -bound.beta, upper = bound.beta,
                             control = list(fnscale = -1))$par
         if (length(beta.hat) == 1) {
@@ -160,7 +160,7 @@ grappleRobustEst <- function(data,
         while (any(abs(beta.hat) > 0.95 * bound.beta) && int.extend <= niter && opt.method == "L-BGFS-B") {
             int.extend <- int.extend + 1
             bound.beta[which(abs(beta.hat) > 0.95 * bound.beta)] <- bound.beta[which(abs(beta.hat) > 0.95 * bound.beta)] * 2
-	    beta.hat <- optim(beta.hat, function(beta) robust.optfun.fixtau(beta, tau2.hat),
+	    beta.hat <- stats::optim(beta.hat, function(beta) robust.optfun.fixtau(beta, tau2.hat),
                             method = opt.method, lower = -bound.beta, upper = bound.beta,
                             control = list(fnscale = -1))$par
           #  beta.hat <- optim(function(beta) robust.optfun.fixtau(beta, tau2.hat),
@@ -193,7 +193,7 @@ grappleRobustEst <- function(data,
         if (temp < 0)
           tau2.hat <- 0
         else
-          tau2.hat <- tryCatch(uniroot(function(tau2) sum(robust.E(beta.hat, tau2)),
+          tau2.hat <- tryCatch(stats::uniroot(function(tau2) sum(robust.E(beta.hat, tau2)),
                                        bound.tau2 * c(0, 1), extendInt = "downX",
                                        tol = bound.tau2 * .Machine$double.eps^0.25)$root,
                                error = function(e) {warning("Did not find a solution for tau2."); 0})
@@ -277,7 +277,7 @@ grappleRobustEst <- function(data,
                 tau2.hat = tau2.hat,
                 beta.var = asymp.var[1:ncol(b_exp), 1:ncol(b_exp)],
                 tau2.se = tau2.se, # / sqrt(efficiency),
-                beta.p.value = pmin(1, 2 * pnorm(abs(beta.hat) / sqrt(diag(asymp.var)[1:r]),
+                beta.p.value = pmin(1, 2 * stats::pnorm(abs(beta.hat) / sqrt(diag(asymp.var)[1:r]),
                                                  lower.tail = F)))# / sqrt(efficiency),
    if (diagnosis) {
         out$std.resid <- std.resid
