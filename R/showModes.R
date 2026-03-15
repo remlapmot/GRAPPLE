@@ -23,9 +23,8 @@
 #' \item{raw.modes}{All modes of the profile likelihood function within the range of \code{mode_lmts}}
 #' \item{supp_gwas}{More information about the markers.}
 #'
-#' @import ggplot2 
+#' @import ggplot2
 #' @importFrom ggrepel geom_text_repel
-#' @importFrom haploR queryHaploreg
 #' @export
 findModes <- function(data,
           					  p.thres = NULL, 
@@ -137,6 +136,10 @@ findModes <- function(data,
 
 	if (ncol(markers) <= 1)
 		map.marker <- F
+	if (map.marker && !requireNamespace("haploR", quietly = TRUE)) {
+		warning("Package 'haploR' is not available; skipping HaploReg gene annotation. Install haploR to enable this feature.")
+		map.marker <- F
+	}
 	if (map.marker) {
 
 	
@@ -149,7 +152,7 @@ findModes <- function(data,
 
   	## map to HaploReg
 	
-    results <- queryHaploreg(query = snp_ids, ldThres = ldThres)
+    results <- haploR::queryHaploreg(query = snp_ids, ldThres = ldThres)
 	  results <- results[, c("rsID", "chr", "pos_hg38", "GENCODE_name", 
 										 "gwas", "dbSNP_functional_annotation",
 										 "is_query_snp", "r2")]

@@ -13,8 +13,9 @@ Imports:
     ggplot2,
     nortest,
     data.table,
-    haploR,
     ggrepel,
     dplyr,
     tools
 RoxygenNote: 7.1.1
+Suggests:
+    haploR
