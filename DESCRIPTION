@@ -15,6 +15,7 @@ Imports:
     data.table,
     ggrepel,
     dplyr,
+    plyr,
     tools
 Suggests:
     haploR
