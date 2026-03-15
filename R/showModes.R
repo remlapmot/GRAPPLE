@@ -83,7 +83,7 @@ findModes <- function(data,
 	## Take npoints equally spaced points to do grid search to check for modes
 	beta.seq <- seq(mode.lmts[1], mode.lmts[2], length.out = npoints)
 	val <- try(sapply(beta.seq, function(beta) robust.optfun.fixtau(beta, 0)))
-	if (class(val) == "try-error")
+	if (inherits(val, "try-error"))
 		stop("Possible error: finding modes is currently available only for
 			 univariate MR with only one risk factor!")
 
