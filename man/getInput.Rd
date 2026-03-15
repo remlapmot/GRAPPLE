@@ -17,7 +17,7 @@ getInput(
   marker.p.source = "exposure",
   clump_r2 = 0.001,
   clump_r2_formarkers = 0.05,
-  plink_exe = NULL
+  plink_exe = "plink"
 )
 }
 \arguments{
@@ -45,7 +45,7 @@ getInput(
 
 \item{clump_r2_formarkers}{The clumping r2 threshold in PLINK. Default is set to 0.05 for selection of candidates for the marker SNPs.}
 
-\item{plink_exe}{The name of the plink exe. Default is NULL, which uses "plink". For users with Linux systems, one may want to have a different name, like "./plink" depending on where they install plink}
+\item{plink_exe}{The name/path of the plink command. Default is "plink". For users with Linux / Windows systems, this command would not work and one need to specify the path of the exe file, like "./plink" depending on where they install plink}
 }
 \value{
 A list of selected summary statistics, which include
